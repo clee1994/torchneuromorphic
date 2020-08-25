@@ -121,14 +121,14 @@ def create_datasets(
             ToCountFrame(T = chunk_size_test, size = size),
             ToTensor()])
     if target_transform_train is None:
-        target_transform_train =Compose([Repeat(chunk_size_train), toOneHot(nclasses)])
+        target_transform_train = Compose([Repeat(chunk_size_train), toOneHot(nclasses)])
     if target_transform_test is None:
         target_transform_test = Compose([Repeat(chunk_size_test), toOneHot(nclasses)])
 
 
     labels_u = np.random.choice(classes_meta, nclasses,replace=False) #100 here becuase we have two pairs of digits between 0 and 9
 
-    train_ds = DoubleNMNISTDataset(root,train=True,
+    train_ds = DoubleNMNISTDataset(root, train=True,
                                  transform = transform_train, 
                                  target_transform = target_transform_train, 
                                  chunk_size = chunk_size_train,
@@ -183,7 +183,7 @@ def create_dataloader(
 
 
     train_dl = torch.utils.data.DataLoader(train_d, shuffle=True, batch_size=batch_size, **dl_kwargs)
-    test_dl = torch.utils.data.DataLoader(test_d, shuffle=False, batch_size=batch_size, **dl_kwargs)
+    test_dl = torch.utils.data.DataLoader(test_d, shuffle=True, batch_size=batch_size, **dl_kwargs)
 
     return train_dl, test_dl
 
