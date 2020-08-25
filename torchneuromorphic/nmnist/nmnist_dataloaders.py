@@ -100,8 +100,8 @@ class NMNISTDataset(NeuromorphicDataset):
         if self.transform is not None:
             data = self.transform(data)
 
-        if self.target_transform is not None:
-            target = self.target_transform(target)
+        #if self.target_transform is not None:
+        #    target = self.target_transform(target)
 
         return data, target
 
