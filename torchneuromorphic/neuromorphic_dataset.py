@@ -88,11 +88,11 @@ def download_and_extract_archive(url, download_root, extract_root=None, filename
 class NeuromorphicDataset(data.Dataset):
     _repr_indent = 4
 
-    def __init__(self, root=None, transforms=None, transform=None, target_transform=None):
+    def __init__(self, root=None, transforms=None, transform=None, target_transform=None, extract_root = None):
         if isinstance(root, torch._six.string_classes):
             root = os.path.expanduser(root)
         self.root = root
-        self.extract_root = None
+        self.extract_root = extract_root
  
         if root is not None:
             if not os.path.isfile(root):
