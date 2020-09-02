@@ -92,7 +92,6 @@ def create_events_hdf5(directory, hdf5_filename):
             tm_dset = subgrp.create_dataset('times' , data=times, dtype = np.uint32)
             ad_dset = subgrp.create_dataset('addrs' , data=addrs, dtype = np.uint8)
             lbl_dset= subgrp.create_dataset('labels', data=label, dtype = np.uint8)
-            import pdb; pdb.set_trace()
             subgrp.attrs['meta_info']= str(metas[-1])
             assert label in range(10)
             key += 1

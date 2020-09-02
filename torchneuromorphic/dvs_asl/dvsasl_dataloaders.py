@@ -203,6 +203,7 @@ def create_dataloader(
         samples_per_class = 1,
         samples_per_test = 256,
         classes_meta = np.arange(14, dtype='int'),
+        batch_size_test = None,
         **dl_kwargs):
 
 
@@ -224,7 +225,7 @@ def create_dataloader(
 
 
     train_dl = torch.utils.data.DataLoader(train_d, shuffle=True, batch_size=batch_size, **dl_kwargs)
-    test_dl = torch.utils.data.DataLoader(test_d, shuffle=True, batch_size=batch_size, **dl_kwargs)
+    test_dl = torch.utils.data.DataLoader(test_d, shuffle=True, batch_size=batch_size_test, **dl_kwargs)
 
     return train_dl, test_dl
 
@@ -234,12 +235,18 @@ def sample_dvsasl_task( N = 5,
                         K_test = 256,
                         meta_split = [range(14), range(14,20), range(20,24)],
                         meta_dataset_type = 'train',
+                        batch_size_test = None,
                         **kwargs):
+
+
+    if batch_size_test == None:
+        batch_size_test = batch_size
+
     classes_meta = {}
     classes_meta['train'] = np.array(meta_split[0], dtype='int')
     classes_meta['val']   = np.array(meta_split[1], dtype='int')
     classes_meta['test']  = np.array(meta_split[2], dtype='int')
 
     assert meta_dataset_type in ['train', 'val', 'test']
-    return create_dataloader(classes_meta = classes_meta[meta_dataset_type], nclasses= N, samples_per_class = K, samples_per_test = K_test, **kwargs)
+    return create_dataloader(classes_meta = classes_meta[meta_dataset_type], nclasses= N, samples_per_class = K, samples_per_test = K_test, batch_size_test = batch_size_test, **kwargs)
 
