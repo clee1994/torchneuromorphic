@@ -21,30 +21,30 @@ import os
 import scipy.io as sio
 
 
-mapping = { 0 :'A',
-            1 :'B',
-            2 :'C',
-            3 :'D',
-            4 :'E',
-            5 :'F',
-            6 :'G',
-            7 :'H',
-            8 :'I',
-            9 :'K',
-            10:'L',
-            11:'M',
-            12:'N',
-            13:'O',
-            14:'P',
-            15:'Q',
-            16:'R',
-            17:'S',
-            18:'T',
-            19:'U',
-            20:'V',
-            21:'W',
-            22:'X',
-            23:'Y'
+mapping = { 'a':0,
+            'b':1,
+            'c':2,
+            'd':3,
+            'e':4,
+            'f':5,
+            'g':6,
+            'h':7,
+            'i':8,
+            'k':9,
+            'l':10,
+            'm':11,
+            'n':12,
+            'o':13,
+            'p':14,
+            'q':15,
+            'r':16,
+            's':17,
+            't':18,
+            'u':19,
+            'v':20,
+            'w':21,
+            'x':22,
+            'y':23
             }
 
 def create_events_hdf5(directory, hdf5_filename):
@@ -63,7 +63,6 @@ def create_events_hdf5(directory, hdf5_filename):
                         fns_train.append(os.path.join(directory, file.split(' ')[-1][0], file_sub))
                     else:
                         fns_test.append(os.path.join(directory, file.split(' ')[-1][0], file_sub))
-            break
 
     #sio.loadmat(file_path)
 
@@ -102,10 +101,9 @@ def create_events_hdf5(directory, hdf5_filename):
             #subj, light = file_d.split('/')[-1].split('.')[0].split('_')[:2]
             metas.append({'key':str(key), 'training sample':istrain}) # 'subject':subj,'light condition':light,
             subgrp = data_grp.create_group(str(key))
-            import pdb; pdb.set_trace()
-            tm_dset = subgrp.create_dataset('times' , data=times, dtype=np.uint32)
-            ad_dset = subgrp.create_dataset('addrs' , data=addrs, dtype=np.uint8)
-            lbl_dset= subgrp.create_dataset('labels', data=lbls[i]-1, dtype=np.uint8)
+            tm_dset = subgrp.create_dataset('times' , data=data['ts'], dtype=np.uint32)
+            ad_dset = subgrp.create_dataset('addrs' , data=np.concatenate((data['pol'], data['x'], data['y']), axis=1), dtype=np.uint8)
+            lbl_dset= subgrp.create_dataset('labels', data=mapping[file_d.split('/')[-2]], dtype=np.uint8)
             subgrp.attrs['meta_info'] = str(metas[-1])
             #assert lbls[i]-1 in range(11)
             key += 1
