@@ -5,7 +5,7 @@
 # Creation Date : Tue 01 Sep 2020 10:05:17 PM PST
 # Last Modified : Tue 01 Sep 2020 10:05:17 PM PST
 #
-# Copyright : (c)
+# Copyright : CJS Schaefer, University of Notre Dame (c)
 # Licence : Apache License, Version 2.0
 #-----------------------------------------------------------------------------
 import struct
@@ -20,21 +20,36 @@ from ..events_timeslices import *
 from ..transforms import *
 import os
 
-mapping = { 0 :'Hand Clapping'  ,
-            1 :'Right Hand Wave',
-            2 :'Left Hand Wave' ,
-            3 :'Right Arm CW'   ,
-            4 :'Right Arm CCW'  ,
-            5 :'Left Arm CW'    ,
-            6 :'Left Arm CCW'   ,
-            7 :'Arm Roll'       ,
-            8 :'Air Drums'      ,
-            9 :'Air Guitar'     ,
-            10:'Other'}
+mapping = { 0 :'A',
+            1 :'B',
+            2 :'C',
+            3 :'D',
+            4 :'E',
+            5 :'F',
+            6 :'G',
+            7 :'H',
+            8 :'I',
+            9 :'K',
+            10:'L',
+            11:'M',
+            12:'N',
+            13:'O',
+            14:'P',
+            15:'Q',
+            16:'R',
+            17:'S',
+            18:'T',
+            19:'U',
+            20:'V',
+            21:'W',
+            22:'X',
+            23:'Y'
+            }
+
 
 class DVSASLDataset(NeuromorphicDataset):
     directory = 'data/dvsasl/'
-    resources_url = [['Manually Download dataset here: https://ibm.ent.box.com/s/3hiq58ww1pbbjrinh367ykfdf60xsfm8/file/211521748942?sb=/details and place under {0}'.format(directory),None, 'DvsGesture.tar.gz']]
+    resources_url = [['Manually Download dataset here: https://www.dropbox.com/sh/ibq0jsicatn7l6r/AACNrNELV56rs1YInMWUs9CAa?dl=0 and place under {0}'.format(directory), None, 'ICCV2019_DVS_dataset.zip']]
     resources_local = [directory+'raw']
 
     def __init__(
@@ -96,7 +111,7 @@ class DVSASLDataset(NeuromorphicDataset):
 
 def sample(hdf5_file,
         key,
-        T = 500,
+        T = 100,
         shuffle = False):
     dset = hdf5_file['data'][str(key)]
     label = dset['labels'][()]
@@ -109,67 +124,116 @@ def sample(hdf5_file,
     return tmad[:, [0,3,1,2]], label
 
  
-def create_dataloader(
-        root = 'data/dvsgesture/dvs_gestures_build19.hdf5',
+def create_datasets(
+        root = 'data/dvsasl/dvsasl.hdf5',
         batch_size = 72 ,
-        chunk_size_train = 500,
-        chunk_size_test = 1800,
-        ds = None,
+        chunk_size_train = 100,
+        chunk_size_test = 100,
+        ds = 1,
         dt = 1000,
         transform_train = None,
         transform_test = None,
         target_transform_train = None,
         target_transform_test = None,
-        n_events_attention=None,
-        **dl_kwargs):
-    if ds is None:
-        ds = 4
-    if isinstance(ds,int):
-        ds = [ds,ds]
-        
-    size = [2, 128//ds[0], 128//ds[1]]
+        nclasses = 5,
+        samples_per_class = 1,
+        samples_per_test = 4200,
+        classes_meta = np.arange(14, dtype='int')):
 
-    if n_events_attention is None:
-        default_transform = lambda chunk_size: Compose([
-            Downsample(factor=[dt,1,ds[0],ds[1]]),
-            ToCountFrame(T = chunk_size, size = size),
-            ToTensor()
-        ])
-    else:
-        default_transform = lambda chunk_size: Compose([
-            Downsample(factor=[dt,1,1,1]),
-            Attention(n_events_attention, size=size),
-            ToCountFrame(T = chunk_size, size = size),
-            ToTensor()
-        ])
+    # this line needs to be corrected!
+    size = [2, 32//ds, 32//ds]
 
     if transform_train is None:
-        transform_train = default_transform(chunk_size_train)
+        transform_train = Compose([
+            CropDims(low_crop=[0,0], high_crop=[32,32], dims=[2,3]),
+            Downsample(factor=[dt,1,ds,ds]),
+            ToCountFrame(T = chunk_size_train, size = size),
+            ToTensor()])
     if transform_test is None:
-        transform_test = default_transform(chunk_size_test)
-
+        transform_test = Compose([
+            CropDims(low_crop=[0,0], high_crop=[32,32], dims=[2,3]),
+            Downsample(factor=[dt,1,ds,ds]),
+            ToCountFrame(T = chunk_size_test, size = size),
+            ToTensor()])
     if target_transform_train is None:
-        target_transform_train =Compose([Repeat(chunk_size_train), toOneHot(11)])
+        target_transform_train = Compose([Repeat(chunk_size_train), toOneHot(nclasses)])
     if target_transform_test is None:
-        target_transform_test = Compose([Repeat(chunk_size_test), toOneHot(11)])
+        target_transform_test = Compose([Repeat(chunk_size_test), toOneHot(nclasses)])
 
-    train_d = DVSASLDataset(root,
-                                train=True,
-                                transform = transform_train, 
-                                target_transform = target_transform_train, 
-                                chunk_size = chunk_size_train)
 
-    train_dl = torch.utils.data.DataLoader(train_d, batch_size=batch_size, shuffle=True, **dl_kwargs)
+    labels_u = np.random.choice(classes_meta, nclasses,replace=False) #100 here becuase we have two pairs of digits between 0 and 9
 
-    test_d = DVSASLDataset(root,
-                               transform = transform_test, 
-                               target_transform = target_transform_test, 
-                               train=False,
-                               chunk_size = chunk_size_test)
+    train_ds = DVSASLDataset(root, train=True,
+                                 transform = transform_train, 
+                                 target_transform = target_transform_train, 
+                                 chunk_size = chunk_size_train,
+                                 nclasses = nclasses,
+                                 samples_per_class = samples_per_class,
+                                 labels_u = labels_u)
 
-    test_dl = torch.utils.data.DataLoader(test_d, batch_size=batch_size, **dl_kwargs)
+    test_ds = DVSASLDataset(root, transform = transform_test, 
+                                 target_transform = target_transform_test, 
+                                 train=False,
+                                 chunk_size = chunk_size_test,
+                                 nclasses = nclasses,
+                                 samples_per_class = samples_per_test,
+                                 labels_u = labels_u)
+
+    return train_ds, test_ds
+
+
+def create_dataloader(
+        root = 'data/dvsasl/dvsasl.hdf5',
+        batch_size = 72,
+        chunk_size_train = 100,
+        chunk_size_test = 100,
+        ds = 1,
+        dt = 1000,
+        transform_train = None,
+        transform_test = None,
+        target_transform_train = None,
+        target_transform_test = None,
+        nclasses = 5,
+        samples_per_class = 1,
+        samples_per_test = 4200,
+        classes_meta = np.arange(14, dtype='int'),
+        **dl_kwargs):
+
+
+    train_d, test_d = create_datasets(
+        root = root,
+        batch_size = batch_size,
+        chunk_size_train = chunk_size_train,
+        chunk_size_test = chunk_size_test,
+        ds = ds,
+        dt = dt,
+        transform_train = transform_train,
+        transform_test = transform_test,
+        target_transform_train = target_transform_train,
+        target_transform_test = target_transform_test,
+        classes_meta = classes_meta,
+        nclasses = nclasses,
+        samples_per_class = samples_per_class,
+        samples_per_test = samples_per_test)
+
+
+    train_dl = torch.utils.data.DataLoader(train_d, shuffle=True, batch_size=batch_size, **dl_kwargs)
+    test_dl = torch.utils.data.DataLoader(test_d, shuffle=True, batch_size=batch_size, **dl_kwargs)
 
     return train_dl, test_dl
 
 
+def sample_dvsasl_task( N = 5,
+                        K = 1,
+                        K_test = 4200,
+                        meta_split = [range(14), range(14,20), range(20,24)],
+                        meta_dataset_type = 'train',
+                        **kwargs):
+    classes_meta = {}
+    classes_meta['train'] = np.array(meta_split[0], dtype='int')
+    classes_meta['val']   = np.array(meta_split[1], dtype='int')
+    classes_meta['test']  = np.array(meta_split[2], dtype='int')
+
+    assert meta_dataset_type in ['train', 'val', 'test']
+    return create_dataloader(classes_meta = classes_meta[meta_dataset_type], nclasses= N, samples_per_class = K, samples_per_test = K_test, **kwargs)
 
