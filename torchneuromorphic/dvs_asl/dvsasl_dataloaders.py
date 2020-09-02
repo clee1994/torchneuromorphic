@@ -64,7 +64,6 @@ class DVSASLDataset(NeuromorphicDataset):
 
         self.directory = "/".join(root.split("/")[:-1])+"/"
         self.resources_url = [['Manually Download dataset here: https://www.dropbox.com/sh/ibq0jsicatn7l6r/AACNrNELV56rs1YInMWUs9CAa?dl=0 and place under {0}'.format(self.directory), None, 'ICCV2019_DVS_dataset.zip']]
-        self.extract_root = self.directory+'raw'
         self.resources_local = [self.directory+'raw']
 
         self.n = 0
@@ -77,6 +76,7 @@ class DVSASLDataset(NeuromorphicDataset):
                 root,
                 transform=transform,
                 target_transform=target_transform )
+        self.extract_root = self.directory+'raw'
 
         with h5py.File(root, 'r', swmr=True, libver="latest") as f:
             if train:
