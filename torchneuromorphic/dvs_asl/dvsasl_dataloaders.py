@@ -75,8 +75,8 @@ class DVSASLDataset(NeuromorphicDataset):
         super(DVSASLDataset, self).__init__(
                 root,
                 transform=transform,
-                target_transform=target_transform )
-        self.extract_root = self.directory+'raw'
+                target_transform=target_transform,
+                extract_root = self.directory+'raw/')
 
         with h5py.File(root, 'r', swmr=True, libver="latest") as f:
             if train:
