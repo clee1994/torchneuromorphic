@@ -142,17 +142,15 @@ class DVSASLDataset(NeuromorphicDataset):
 
 def sample(hdf5_file,
         key,
-        T = 100,
-        shuffle = False):
+        T = 300):
     dset = hdf5_file['data'][str(key)]
     label = dset['labels'][()]
-    tbegin = dset['times'][0]
-    tend = np.maximum(0,dset['times'][-1]- 2*T*1000 )
-    start_time = np.random.randint(tbegin, tend) if shuffle else 0
+    tend = dset['times'][-1] 
+    start_time = 0
 
     tmad = get_tmad_slice(dset['times'][()], dset['addrs'][()], start_time, T*1000)
     tmad[:,0]-=tmad[0,0]
-    return tmad[:, [0,3,1,2]], label
+    return tmad, label
 
  
 def create_datasets(
