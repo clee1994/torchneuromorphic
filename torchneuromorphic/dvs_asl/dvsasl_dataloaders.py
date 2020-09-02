@@ -48,9 +48,7 @@ mapping = { 0 :'A',
 
 
 class DVSASLDataset(NeuromorphicDataset):
-    directory = 'data/dvsasl/'
     resources_url = [['Manually Download dataset here: https://www.dropbox.com/sh/ibq0jsicatn7l6r/AACNrNELV56rs1YInMWUs9CAa?dl=0 and place under {0}'.format(directory), None, 'ICCV2019_DVS_dataset.zip']]
-    resources_local = [directory+'raw']
 
     def __init__(
             self, 
@@ -87,6 +85,8 @@ class DVSASLDataset(NeuromorphicDataset):
         super(DVSASLDataset, self).download()
 
     def create_hdf5(self):
+        import pdb; pdb.set_trace()
+        resources_local = [root+'raw']
         create_events_hdf5(self.resources_local[0], self.root)
 
     def __len__(self):
@@ -140,7 +140,7 @@ def create_datasets(
         target_transform_test = None,
         nclasses = 5,
         samples_per_class = 1,
-        samples_per_test = 4200,
+        samples_per_test = 256,
         classes_meta = np.arange(14, dtype='int')):
 
     # this line needs to be corrected!
@@ -198,7 +198,7 @@ def create_dataloader(
         target_transform_test = None,
         nclasses = 5,
         samples_per_class = 1,
-        samples_per_test = 4200,
+        samples_per_test = 256,
         classes_meta = np.arange(14, dtype='int'),
         **dl_kwargs):
 
@@ -228,7 +228,7 @@ def create_dataloader(
 
 def sample_dvsasl_task( N = 5,
                         K = 1,
-                        K_test = 4200,
+                        K_test = 256,
                         meta_split = [range(14), range(14,20), range(20,24)],
                         meta_dataset_type = 'train',
                         **kwargs):
