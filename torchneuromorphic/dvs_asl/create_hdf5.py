@@ -102,6 +102,7 @@ def create_events_hdf5(directory, hdf5_filename):
             #subj, light = file_d.split('/')[-1].split('.')[0].split('_')[:2]
             metas.append({'key':str(key), 'training sample':istrain}) # 'subject':subj,'light condition':light,
             subgrp = data_grp.create_group(str(key))
+            import pdb; pdb.set_trace()
             tm_dset = subgrp.create_dataset('times' , data=times, dtype=np.uint32)
             ad_dset = subgrp.create_dataset('addrs' , data=addrs, dtype=np.uint8)
             lbl_dset= subgrp.create_dataset('labels', data=lbls[i]-1, dtype=np.uint8)
