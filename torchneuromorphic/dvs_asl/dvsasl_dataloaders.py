@@ -128,8 +128,7 @@ class DVSASLDataset(NeuromorphicDataset):
             data, target = sample(
                     f,
                     key,
-                    T = self.chunk_size,
-                    shuffle=self.train)
+                    T = self.chunk_size)
 
         if self.transform is not None:
             data = self.transform(data)
