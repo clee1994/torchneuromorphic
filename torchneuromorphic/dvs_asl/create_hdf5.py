@@ -20,6 +20,33 @@ from ..utils import *
 import os
 import scipy.io as sio
 
+
+mapping = { 0 :'A',
+            1 :'B',
+            2 :'C',
+            3 :'D',
+            4 :'E',
+            5 :'F',
+            6 :'G',
+            7 :'H',
+            8 :'I',
+            9 :'K',
+            10:'L',
+            11:'M',
+            12:'N',
+            13:'O',
+            14:'P',
+            15:'Q',
+            16:'R',
+            17:'S',
+            18:'T',
+            19:'U',
+            20:'V',
+            21:'W',
+            22:'X',
+            23:'Y'
+            }
+
 def create_events_hdf5(directory, hdf5_filename):
     # 80/20 train/test
     fns_train = []
@@ -57,28 +84,28 @@ def create_events_hdf5(directory, hdf5_filename):
             data = sio.loadmat(file_d)
 
             #data, labels_starttime = aedat_to_events(file_d)
-            tms = data[:,0]
-            ads = data[:,1:]
-            lbls = labels_starttime[:,0]
-            start_tms = labels_starttime[:,1]
-            end_tms = labels_starttime[:,2]
-            out = []
+            #tms = data[:,0]
+            #ads = data[:,1:]
+            #lbls = labels_starttime[:,0]
+            #start_tms = labels_starttime[:,1]
+            #end_tms = labels_starttime[:,2]
+            #out = []
 
             for i, v in enumerate(lbls):
                 if istrain: 
                     train_keys.append(key)
                 else:
                     test_keys.append(key)
-                s_ = get_slice(tms, ads, start_tms[i], end_tms[i])
-                times = s_[0]
-                addrs = s_[1]
+                #s_ = get_slice(tms, ads, start_tms[i], end_tms[i])
+                #times = s_[0]
+                #addrs = s_[1]
                 #subj, light = file_d.split('/')[-1].split('.')[0].split('_')[:2]
                 metas.append({'key':str(key), 'training sample':istrain}) # 'subject':subj,'light condition':light,
                 subgrp = data_grp.create_group(str(key))
                 tm_dset = subgrp.create_dataset('times' , data=times, dtype=np.uint32)
                 ad_dset = subgrp.create_dataset('addrs' , data=addrs, dtype=np.uint8)
                 lbl_dset= subgrp.create_dataset('labels', data=lbls[i]-1, dtype=np.uint8)
-                subgrp.attrs['meta_info']= str(metas[-1])
+                subgrp.attrs['meta_info'] = str(metas[-1])
                 #assert lbls[i]-1 in range(11)
                 key += 1
         extra_grp.create_dataset('train_keys', data=train_keys)
