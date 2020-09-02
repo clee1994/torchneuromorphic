@@ -69,11 +69,15 @@ class DVSASLDataset(NeuromorphicDataset):
         self.n = samples_per_class * nclasses
         self.nclasses = nclasses
 
-
         self.download_and_create = download_and_create
         self.root = root
         self.train = train 
         self.chunk_size = chunk_size
+
+        self.labels_u = labels_u
+        self.labels = np.repeat(self.labels_u, samples_per_class)
+        self.labels_map =  dict(zip(np.unique(self.labels),np.arange(nclasses)))
+
 
         super(DVSASLDataset, self).__init__(
                 root,
@@ -83,11 +87,14 @@ class DVSASLDataset(NeuromorphicDataset):
 
         with h5py.File(root, 'r', swmr=True, libver="latest") as f:
             if train:
-                self.n = f['extra'].attrs['Ntrain']
                 self.keys = f['extra']['train_keys'][()]
+                self.keys_by_label = f['extra']['train_keys_by_label'][()]
             else:
-                self.n = f['extra'].attrs['Ntest']
                 self.keys = f['extra']['test_keys'][()]
+                self.keys_by_label = f['extra']['test_keys_by_label'][()]
+
+        self.keys = np.array([ np.random.choice(s, samples_per_class) for s in self.keys_by_label[self.labels_u]]).reshape(-1)
+
         import pdb; pdb.set_trace()
 
     def download(self):
