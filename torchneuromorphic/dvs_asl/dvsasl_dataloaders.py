@@ -121,10 +121,11 @@ class DVSASLDataset(NeuromorphicDataset):
 
         #Important to open and close in getitem to enable num_workers>0
         with h5py.File(self.root, 'r', swmr=True, libver="latest") as f:
+
             if self.train:
-                key = f['extra']['train_keys'][key]
+                key = f['extra']['train_keys'][self.keys[key]]
             else:
-                key = f['extra']['test_keys'][key]
+                key = f['extra']['test_keys'][self.keys[key]]
             data, target = sample(
                     f,
                     key,
