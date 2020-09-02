@@ -135,7 +135,6 @@ class DVSASLDataset(NeuromorphicDataset):
             data = self.transform(data)
 
         if self.target_transform is not None:
-            import pdb; pdb.set_trace()
             target = self.target_transform(target)
 
 
