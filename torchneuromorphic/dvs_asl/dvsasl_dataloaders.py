@@ -62,10 +62,9 @@ class DVSASLDataset(NeuromorphicDataset):
             labels_u = range(5)):
 
 
-        import pdb; pdb.set_trace()
-        self.directory = root
+        self.directory = "/".join(root.split("/")[:-1])+"/"
         self.resources_url = [['Manually Download dataset here: https://www.dropbox.com/sh/ibq0jsicatn7l6r/AACNrNELV56rs1YInMWUs9CAa?dl=0 and place under {0}'.format(self.directory), None, 'ICCV2019_DVS_dataset.zip']]
-        self.resources_local = [root+'raw']
+        self.resources_local = [directory+'raw']
 
         self.n = 0
         self.download_and_create = download_and_create
