@@ -92,6 +92,7 @@ class DVSASLDataset(NeuromorphicDataset):
             else:
                 self.keys = f['extra']['test_keys'][()]
                 self.keys_by_label = f['extra']['test_keys_by_label'][()]
+                import pdb; pdb.set_trace()
 
         self.keys = np.array([ np.random.choice(s, samples_per_class) for s in self.keys_by_label[self.labels_u]]).reshape(-1)
 
@@ -125,6 +126,7 @@ class DVSASLDataset(NeuromorphicDataset):
             if self.train:
                 key = f['extra']['train_keys'][self.keys[key]]
             else:
+                import pdb; pdb.set_trace()
                 key = f['extra']['test_keys'][self.keys[key]]
             data, target = sample(
                     f,
