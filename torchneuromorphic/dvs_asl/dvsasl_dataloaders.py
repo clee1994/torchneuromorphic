@@ -131,7 +131,6 @@ class DVSASLDataset(NeuromorphicDataset):
                     T = self.chunk_size)
 
         if self.transform is not None:
-            import pdb; pdb.set_trace()
             data = self.transform(data)
 
         if self.target_transform is not None:
@@ -170,7 +169,7 @@ def create_datasets(
         classes_meta = np.arange(14, dtype='int')):
 
     # this line needs to be corrected!
-    size = [2, 32//ds, 32//ds]
+    size = [2, 239//ds, 179//ds]
 
     if transform_train is None:
         transform_train = Compose([
