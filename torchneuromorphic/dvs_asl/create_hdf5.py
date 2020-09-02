@@ -21,18 +21,26 @@ import os
 import scipy.io as sio
 
 def create_events_hdf5(directory, hdf5_filename):
+    # 80/20 train/test
+    fns_train = []
+    fns_test  = []
 
     # unzip all zips
     for file in os.listdir(directory):
         if file.endswith(".zip"):
             print("Extracting: {}".format(file))
             extract_archive(os.path.join(directory, file), directory, False)
+            import pdb; pdb.set_trace()
+            for file in os.listdir(os.path.join(directory, )):
+                if file.endswith(".zip"):
+
     import pdb; pdb.set_trace()
 
     sio.loadmat(file_path)
 
-    fns_train = gather_aedat(directory,1,24)
-    fns_test = gather_aedat(directory,24,30)
+
+    
+
     test_keys = []
     train_keys = []
 
