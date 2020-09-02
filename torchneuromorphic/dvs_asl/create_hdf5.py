@@ -25,6 +25,7 @@ def create_events_hdf5(directory, hdf5_filename):
     # unzip all zips
     for file in os.listdir(directory):
         if file.endswith(".zip"):
+            print("Extracting: {}".format(file))
             extract_archive(os.path.join(directory, file), directory, False)
     import pdb; pdb.set_trace()
 
