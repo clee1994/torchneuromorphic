@@ -67,6 +67,8 @@ def create_events_hdf5(directory, hdf5_filename):
 
     test_keys = []
     train_keys = []
+    train_label_list = [[] for i in range(24)]
+    test_label_list = [[] for i in range(24)]
 
     #assert len(fns_train)==98
 
@@ -82,6 +84,8 @@ def create_events_hdf5(directory, hdf5_filename):
 
             data = sio.loadmat(file_d)
 
+            label = mapping[file_d.split('/')[-2]]
+
             #data, labels_starttime = aedat_to_events(file_d)
             #tms = data[:,0]
             #ads = data[:,1:]
@@ -92,8 +96,10 @@ def create_events_hdf5(directory, hdf5_filename):
 
             if istrain: 
                 train_keys.append(key)
+                train_label_list[label].append(key)
             else:
                 test_keys.append(key)
+                test_label_list[label].append(key)
             #s_ = get_slice(tms, ads, start_tms[i], end_tms[i])
             #times = s_[0]
             #addrs = s_[1]
@@ -102,12 +108,14 @@ def create_events_hdf5(directory, hdf5_filename):
             subgrp = data_grp.create_group(str(key))
             tm_dset = subgrp.create_dataset('times' , data=data['ts'], dtype=np.uint32)
             ad_dset = subgrp.create_dataset('addrs' , data=np.concatenate((data['pol'], data['x'], data['y']), axis=1), dtype=np.uint8)
-            lbl_dset= subgrp.create_dataset('labels', data=mapping[file_d.split('/')[-2]], dtype=np.uint8)
+            lbl_dset= subgrp.create_dataset('labels', data=label, dtype=np.uint8)
             subgrp.attrs['meta_info'] = str(metas[-1])
             #assert lbls[i]-1 in range(11)
             key += 1
         extra_grp.create_dataset('train_keys', data=train_keys)
         extra_grp.create_dataset('test_keys', data=test_keys)
+        extra_grp.create_dataset('train_keys_by_label', data = train_label_list)
+        extra_grp.create_dataset('test_keys_by_label', data = test_label_list)
         extra_grp.attrs['N'] = len(train_keys) + len(test_keys)
         extra_grp.attrs['Ntrain'] = len(train_keys)
         extra_grp.attrs['Ntest'] = len(test_keys)
