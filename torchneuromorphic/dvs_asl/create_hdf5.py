@@ -31,8 +31,8 @@ def create_events_hdf5(directory, hdf5_filename):
             print("Extracting: {}".format(file))
             extract_archive(os.path.join(directory, file), directory, False)
             import pdb; pdb.set_trace()
-            for file in os.listdir(os.path.join(directory, )):
-                if file.endswith(".zip"):
+            #for file in os.listdir(os.path.join(directory, )):
+            #    if file.endswith(".zip"):
 
     import pdb; pdb.set_trace()
 
