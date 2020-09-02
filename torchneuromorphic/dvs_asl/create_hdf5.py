@@ -20,6 +20,9 @@ import os
 
 def create_events_hdf5(directory, hdf5_filename):
     import pdb; pdb.set_trace()
+
+    # unzip all zips
+
     fns_train = gather_aedat(directory,1,24)
     fns_test = gather_aedat(directory,24,30)
     test_keys = []
