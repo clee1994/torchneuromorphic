@@ -59,7 +59,10 @@ class DVSASLDataset(NeuromorphicDataset):
             transform=None,
             target_transform=None,
             download_and_create=True,
-            chunk_size = 100):
+            chunk_size = 100,
+            nclasses = 5,
+            samples_per_class = 2,
+            labels_u = range(5)):
 
         self.n = 0
         self.download_and_create = download_and_create
