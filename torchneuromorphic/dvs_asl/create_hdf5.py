@@ -1,14 +1,13 @@
-#!/bin/python
+#!/usr/bin/env python
 #-----------------------------------------------------------------------------
-# File Name : create_hdf5.py
-# Author: Emre Neftci
+# Author: Clemens JS Schaefer
 #
-# Creation Date : Tue Nov  5 13:15:54 2019
-# Last Modified : 
+# Creation Date : Tue 01 Sep 2020 10:05:17 PM PST
+# Last Modified : Tue 01 Sep 2020 10:05:17 PM PST
 #
-# Copyright : (c) UC Regents, Emre Neftci
-# Licence : GPLv2
-#----------------------------------------------------------------------------- 
+# Copyright : CJS Schaefer, University of Notre Dame (c)
+# Licence : Apache License, Version 2.0
+#-----------------------------------------------------------------------------
 import numpy as np
 from tqdm import tqdm
 import scipy.misc
@@ -20,8 +19,9 @@ from ..utils import *
 import os
 
 def create_events_hdf5(directory, hdf5_filename):
+    import pdb; pdb.set_trace()
     fns_train = gather_aedat(directory,1,24)
-    fns_test = gather_aedat (directory,24,30)
+    fns_test = gather_aedat(directory,24,30)
     test_keys = []
     train_keys = []
 
