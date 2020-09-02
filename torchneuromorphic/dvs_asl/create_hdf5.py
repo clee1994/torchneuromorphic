@@ -21,7 +21,6 @@ import os
 import scipy.io as sio
 
 def create_events_hdf5(directory, hdf5_filename):
-    import pdb; pdb.set_trace()
 
     # unzip all zips
     for file in os.listdir(directory):
