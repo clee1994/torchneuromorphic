@@ -169,7 +169,7 @@ def create_datasets(
         classes_meta = np.arange(14, dtype='int')):
 
     # this line needs to be corrected!
-    size = [2, (239//ds)-1, (179//ds)-1]
+    size = [2, 239//ds, 179//ds]
 
     if transform_train is None:
         transform_train = Compose([
