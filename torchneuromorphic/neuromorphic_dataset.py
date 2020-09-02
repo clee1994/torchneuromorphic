@@ -96,6 +96,7 @@ class NeuromorphicDataset(data.Dataset):
         if isinstance(root, torch._six.string_classes):
             root = os.path.expanduser(root)
         self.root = root
+        self.extract_root = None
  
         if root is not None:
             if not os.path.isfile(root):
@@ -168,7 +169,7 @@ class NeuromorphicDataset(data.Dataset):
         else:
             os.makedirs(self.directory, exist_ok=True)
             for url, md5, filename in self.resources_url:
-                download_and_extract_archive(url, download_root=self.directory, filename=filename, md5=md5)
+                download_and_extract_archive(url, download_root=self.directory, filename=filename, md5=md5, extract_root = self.extract_root)
             return False
 
     def create_hdf5(self):
