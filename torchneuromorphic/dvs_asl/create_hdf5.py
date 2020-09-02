@@ -14,21 +14,29 @@ import scipy.misc
 import h5py
 import glob
 import torch.utils.data
+from torchvision.datasets.utils import extract_archive
 from ..events_timeslices import *
 from ..utils import *
 import os
+import scipy.io as sio
 
 def create_events_hdf5(directory, hdf5_filename):
     import pdb; pdb.set_trace()
 
     # unzip all zips
+    for file in os.listdir(directory):
+        if file.endswith(".zip"):
+            extract_archive(os.path.join(directory, file), directory, False)
+    import pdb; pdb.set_trace()
+
+    sio.loadmat(file_path)
 
     fns_train = gather_aedat(directory,1,24)
     fns_test = gather_aedat(directory,24,30)
     test_keys = []
     train_keys = []
 
-    assert len(fns_train)==98
+    #assert len(fns_train)==98
 
     with h5py.File(hdf5_filename, 'w') as f:
         f.clear()
