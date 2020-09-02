@@ -87,12 +87,11 @@ class DVSASLDataset(NeuromorphicDataset):
 
         with h5py.File(root, 'r', swmr=True, libver="latest") as f:
             if train:
-                self.keys = f['extra']['train_keys'][()]
+                #self.keys = f['extra']['train_keys'][()]
                 self.keys_by_label = f['extra']['train_keys_by_label'][()]
             else:
-                self.keys = f['extra']['test_keys'][()]
+                #self.keys = f['extra']['test_keys'][()]
                 self.keys_by_label = f['extra']['test_keys_by_label'][()]
-        import pdb; pdb.set_trace()
 
         self.keys = np.array([ np.random.choice(s, samples_per_class) for s in self.keys_by_label[self.labels_u]]).reshape(-1)
 
@@ -123,11 +122,12 @@ class DVSASLDataset(NeuromorphicDataset):
         #Important to open and close in getitem to enable num_workers>0
         with h5py.File(self.root, 'r', swmr=True, libver="latest") as f:
 
-            if self.train:
-                key = f['extra']['train_keys'][self.keys[key]]
-            else:
-                import pdb; pdb.set_trace()
-                key = f['extra']['test_keys'][self.keys[key]]
+            #if self.train:
+            #    key = self.keys[key]
+            #else:
+            #    import pdb; pdb.set_trace()
+            key = self.keys[key]
+
             data, target = sample(
                     f,
                     key,
