@@ -106,11 +106,25 @@ class DVSASLDataset(NeuromorphicDataset):
         return self.n
         
     def __getitem__(self, key):
+        # #Important to open and close in getitem to enable num_workers>0
+        # with h5py.File(self.root, 'r', swmr=True, libver="latest") as f:
+        #     if not self.train:
+        #         key = key + f['extra'].attrs['Ntrain']
+        #     import pdb; pdb.set_trace()
+        #     assert key in self.keys
+        #     data, target = sample(
+        #             f,
+        #             key,
+        #             T = self.chunk_size,
+        #             shuffle=self.train)
+
+
         #Important to open and close in getitem to enable num_workers>0
         with h5py.File(self.root, 'r', swmr=True, libver="latest") as f:
-            if not self.train:
-                key = key + f['extra'].attrs['Ntrain']
-            assert key in self.keys
+            if self.train:
+                key = f['extra']['train_keys'][key]
+            else:
+                key = f['extra']['test_keys'][key]
             data, target = sample(
                     f,
                     key,
@@ -122,6 +136,7 @@ class DVSASLDataset(NeuromorphicDataset):
 
         if self.target_transform is not None:
             target = self.target_transform(target)
+
 
         return data, target
 
