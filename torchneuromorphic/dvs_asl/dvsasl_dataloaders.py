@@ -203,7 +203,7 @@ def create_datasets(
                                  labels_u = labels_u)
 
     test_ds = DVSASLDataset(root, transform = transform_test, 
-                                 target_transform = None,target_transform_test, 
+                                 target_transform = None,#target_transform_test, 
                                  train=False,
                                  chunk_size = chunk_size_test,
                                  nclasses = nclasses,
