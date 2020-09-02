@@ -131,9 +131,11 @@ class DVSASLDataset(NeuromorphicDataset):
                     T = self.chunk_size)
 
         if self.transform is not None:
+            import pdb; pdb.set_trace()
             data = self.transform(data)
 
         if self.target_transform is not None:
+            import pdb; pdb.set_trace()
             target = self.target_transform(target)
 
 
