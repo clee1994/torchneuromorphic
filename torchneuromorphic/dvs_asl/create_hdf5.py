@@ -63,7 +63,6 @@ def create_events_hdf5(directory, hdf5_filename):
                         fns_train.append(os.path.join(directory, file.split(' ')[-1][0], file_sub))
                     else:
                         fns_test.append(os.path.join(directory, file.split(' ')[-1][0], file_sub))
-            break
     #sio.loadmat(file_path)
 
     test_keys = []
