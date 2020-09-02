@@ -66,7 +66,10 @@ class DVSASLDataset(NeuromorphicDataset):
         self.resources_url = [['Manually Download dataset here: https://www.dropbox.com/sh/ibq0jsicatn7l6r/AACNrNELV56rs1YInMWUs9CAa?dl=0 and place under {0}'.format(self.directory), None, 'ICCV2019_DVS_dataset.zip']]
         self.resources_local = [self.directory+'raw']
 
-        self.n = 0
+        self.n = samples_per_class * nclasses
+        self.nclasses = nclasses
+
+
         self.download_and_create = download_and_create
         self.root = root
         self.train = train 
@@ -85,6 +88,7 @@ class DVSASLDataset(NeuromorphicDataset):
             else:
                 self.n = f['extra'].attrs['Ntest']
                 self.keys = f['extra']['test_keys'][()]
+        import pdb; pdb.set_trace()
 
     def download(self):
         super(DVSASLDataset, self).download()
