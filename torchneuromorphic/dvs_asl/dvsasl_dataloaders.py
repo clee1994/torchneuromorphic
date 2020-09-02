@@ -48,7 +48,6 @@ mapping = { 0 :'A',
 
 
 class DVSASLDataset(NeuromorphicDataset):
-    resources_url = [['Manually Download dataset here: https://www.dropbox.com/sh/ibq0jsicatn7l6r/AACNrNELV56rs1YInMWUs9CAa?dl=0 and place under {0}'.format(directory), None, 'ICCV2019_DVS_dataset.zip']]
 
     def __init__(
             self, 
@@ -61,6 +60,12 @@ class DVSASLDataset(NeuromorphicDataset):
             nclasses = 5,
             samples_per_class = 2,
             labels_u = range(5)):
+
+
+        import pdb; pdb.set_trace()
+        self.directory = root
+        self.resources_url = [['Manually Download dataset here: https://www.dropbox.com/sh/ibq0jsicatn7l6r/AACNrNELV56rs1YInMWUs9CAa?dl=0 and place under {0}'.format(self.directory), None, 'ICCV2019_DVS_dataset.zip']]
+        self.resources_local = [root+'raw']
 
         self.n = 0
         self.download_and_create = download_and_create
@@ -85,8 +90,6 @@ class DVSASLDataset(NeuromorphicDataset):
         super(DVSASLDataset, self).download()
 
     def create_hdf5(self):
-        import pdb; pdb.set_trace()
-        resources_local = [root+'raw']
         create_events_hdf5(self.resources_local[0], self.root)
 
     def __len__(self):
