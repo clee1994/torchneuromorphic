@@ -30,16 +30,14 @@ def create_events_hdf5(directory, hdf5_filename):
         if file.endswith(".zip"):
             print("Extracting: {}".format(file))
             extract_archive(os.path.join(directory, file), directory, False)
-            import pdb; pdb.set_trace()
-            #for file in os.listdir(os.path.join(directory, )):
-            #    if file.endswith(".zip"):
+            for file_sub in os.listdir(os.path.join(directory, file.split(' ')[-1][0])):
+                if file_sub.endswith(".mat"):
+                    if int(file_sub.split('_')[-1].split('.')[0]) < 3361:
+                        fns_train.append(os.path.join(directory, file.split(' ')[-1][0], file_sub))
+                    else:
+                        fns_test.append(os.path.join(directory, file.split(' ')[-1][0], file_sub))
 
-    import pdb; pdb.set_trace()
-
-    sio.loadmat(file_path)
-
-
-    
+    #sio.loadmat(file_path)
 
     test_keys = []
     train_keys = []
@@ -55,7 +53,10 @@ def create_events_hdf5(directory, hdf5_filename):
         extra_grp = f.create_group('extra')
         for file_d in tqdm(fns_train+fns_test):
             istrain = file_d in fns_train
-            data, labels_starttime = aedat_to_events(file_d)
+
+            data = sio.loadmat(file_d)
+
+            #data, labels_starttime = aedat_to_events(file_d)
             tms = data[:,0]
             ads = data[:,1:]
             lbls = labels_starttime[:,0]
@@ -71,8 +72,8 @@ def create_events_hdf5(directory, hdf5_filename):
                 s_ = get_slice(tms, ads, start_tms[i], end_tms[i])
                 times = s_[0]
                 addrs = s_[1]
-                subj, light = file_d.split('/')[-1].split('.')[0].split('_')[:2]
-                metas.append({'key':str(key), 'subject':subj,'light condition':light, 'training sample':istrain}) 
+                #subj, light = file_d.split('/')[-1].split('.')[0].split('_')[:2]
+                metas.append({'key':str(key), 'training sample':istrain}) # 'subject':subj,'light condition':light,
                 subgrp = data_grp.create_group(str(key))
                 tm_dset = subgrp.create_dataset('times' , data=times, dtype=np.uint32)
                 ad_dset = subgrp.create_dataset('addrs' , data=addrs, dtype=np.uint8)
@@ -86,16 +87,16 @@ def create_events_hdf5(directory, hdf5_filename):
         extra_grp.attrs['Ntrain'] = len(train_keys)
         extra_grp.attrs['Ntest'] = len(test_keys)
             
-def gather_aedat(directory, start_id, end_id, filename_prefix = 'user'):
-    if not os.path.isdir(directory):
-        raise FileNotFoundError("DVS Gestures Dataset not found, looked at: {}".format(directory))
-    import glob
-    fns = []
-    for i in range(start_id,end_id):
-        search_mask = directory+'/'+filename_prefix+"{0:02d}".format(i)+'*.aedat'
-        glob_out = glob.glob(search_mask)
-        if len(glob_out)>0:
-            fns+=glob_out
-    return fns
+# def gather_aedat(directory, start_id, end_id, filename_prefix = 'user'):
+#     if not os.path.isdir(directory):
+#         raise FileNotFoundError("DVS Gestures Dataset not found, looked at: {}".format(directory))
+#     import glob
+#     fns = []
+#     for i in range(start_id,end_id):
+#         search_mask = directory+'/'+filename_prefix+"{0:02d}".format(i)+'*.aedat'
+#         glob_out = glob.glob(search_mask)
+#         if len(glob_out)>0:
+#             fns+=glob_out
+#     return fns
 
 
