@@ -196,14 +196,14 @@ def create_datasets(
 
     train_ds = DVSASLDataset(root, train=True,
                                  transform = transform_train, 
-                                 target_transform = target_transform_train, 
+                                 target_transform = None,#target_transform_train, 
                                  chunk_size = chunk_size_train,
                                  nclasses = nclasses,
                                  samples_per_class = samples_per_class,
                                  labels_u = labels_u)
 
     test_ds = DVSASLDataset(root, transform = transform_test, 
-                                 target_transform = target_transform_test, 
+                                 target_transform = None,target_transform_test, 
                                  train=False,
                                  chunk_size = chunk_size_test,
                                  nclasses = nclasses,
