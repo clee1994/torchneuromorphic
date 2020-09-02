@@ -95,7 +95,6 @@ class DVSASLDataset(NeuromorphicDataset):
 
         self.keys = np.array([ np.random.choice(s, samples_per_class) for s in self.keys_by_label[self.labels_u]]).reshape(-1)
 
-        import pdb; pdb.set_trace()
 
     def download(self):
         super(DVSASLDataset, self).download()
