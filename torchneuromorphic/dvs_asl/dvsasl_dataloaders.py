@@ -131,10 +131,7 @@ class DVSASLDataset(NeuromorphicDataset):
                     T = self.chunk_size)
 
         if self.transform is not None:
-            try:
-                data = self.transform(data)
-            except:
-                import pdb; pdb.set_trace()
+            data = self.transform(data)
 
         if self.target_transform is not None:
             target = self.target_transform(target)
@@ -176,13 +173,13 @@ def create_datasets(
 
     if transform_train is None:
         transform_train = Compose([
-            CropDims(low_crop=[0,0], high_crop=[32,32], dims=[2,3]),
+            CropDims(low_crop=[0,0], high_crop=[239,179], dims=[2,3]),
             Downsample(factor=[dt,1,ds,ds]),
             ToCountFrame(T = chunk_size_train, size = size),
             ToTensor()])
     if transform_test is None:
         transform_test = Compose([
-            CropDims(low_crop=[0,0], high_crop=[32,32], dims=[2,3]),
+            CropDims(low_crop=[0,0], high_crop=[239,179], dims=[2,3]),
             Downsample(factor=[dt,1,ds,ds]),
             ToCountFrame(T = chunk_size_test, size = size),
             ToTensor()])
