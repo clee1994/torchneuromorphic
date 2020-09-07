@@ -33,18 +33,21 @@ mapping = { 0 :'Hand Clapping'  ,
             10:'Other'}
 
 class DVSGestureDataset(NeuromorphicDataset):
-    directory = 'data/dvsgesture/'
-    resources_url = [['Manually Download dataset here: https://ibm.ent.box.com/s/3hiq58ww1pbbjrinh367ykfdf60xsfm8/file/211521748942?sb=/details and place under {0}'.format(directory),None, 'DvsGesture.tar.gz']]
-    resources_local = [directory+'raw']
 
     def __init__(
             self, 
             root,
+            work_dir = 'data/dvsgesture/',
             train=True,
             transform=None,
             target_transform=None,
             download_and_create=True,
             chunk_size = 500):
+
+        self.directory = work_dir
+        self.resources_url = [['Manually Download dataset here: https://ibm.ent.box.com/s/3hiq58ww1pbbjrinh367ykfdf60xsfm8/file/211521748942?sb=/details and place under {0}'.format(self.directory),None, 'DvsGesture.tar.gz']]
+        self.resources_local = [self.directory+'raw']
+
 
         self.n = 0
         self.download_and_create = download_and_create
@@ -111,6 +114,7 @@ def sample(hdf5_file,
  
 def create_dataloader(
         root = 'data/dvsgesture/dvs_gestures_build19.hdf5',
+        work_dir = 'data/dvsgesture/',
         batch_size = 72 ,
         chunk_size_train = 500,
         chunk_size_test = 1800,
@@ -153,7 +157,9 @@ def create_dataloader(
     if target_transform_test is None:
         target_transform_test = Compose([Repeat(chunk_size_test), toOneHot(11)])
 
+    import pdb; pdb.set_trace()
     train_d = DVSGestureDataset(root,
+                                work_dir = work_dir,
                                 train=True,
                                 transform = transform_train, 
                                 target_transform = target_transform_train, 
@@ -162,6 +168,7 @@ def create_dataloader(
     train_dl = torch.utils.data.DataLoader(train_d, batch_size=batch_size, shuffle=True, **dl_kwargs)
 
     test_d = DVSGestureDataset(root,
+                               work_dir = work_dir,
                                transform = transform_test, 
                                target_transform = target_transform_test, 
                                train=False,
