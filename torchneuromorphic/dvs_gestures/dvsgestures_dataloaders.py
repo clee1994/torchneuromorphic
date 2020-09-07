@@ -157,10 +157,9 @@ def create_dataloader(
     if target_transform_test is None:
         target_transform_test = Compose([Repeat(chunk_size_test), toOneHot(11)])
 
-    import pdb; pdb.set_trace()
     train_d = DVSGestureDataset(root,
                                 work_dir = work_dir,
-                                train=True,
+                                train = True,
                                 transform = transform_train, 
                                 target_transform = target_transform_train, 
                                 chunk_size = chunk_size_train)
@@ -177,6 +176,5 @@ def create_dataloader(
     test_dl = torch.utils.data.DataLoader(test_d, batch_size=batch_size, **dl_kwargs)
 
     return train_dl, test_dl
-
 
 
