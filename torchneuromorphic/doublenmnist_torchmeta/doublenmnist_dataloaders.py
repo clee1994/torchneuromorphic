@@ -122,7 +122,7 @@ class DoubleNMNISTClassDataset(NeuromorphicDataset):
 
 
 class ClassNMNISTDataset(torchmeta.utils.data.ClassDataset):
-    def __init__(self, root = 'data/nmnist/n_mnist.hdf5', chunk_size=300, meta_train=False, meta_val=False, meta_test=False, meta_split=None, transform=None, target_transform=None, download=False, class_augmentations=None):
+    def __init__(self, root = 'data.nosync/nmnist/n_mnist.hdf5', chunk_size=300, meta_train=False, meta_val=False, meta_test=False, meta_split=None, transform=None, target_transform=None, download=False, class_augmentations=None):
         self.root=root
         self.chunk_size = chunk_size
         if meta_train is True:
