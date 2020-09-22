@@ -97,7 +97,7 @@ class DoubleNMNISTClassDataset(NeuromorphicDataset):
 
 
     def __len__(self):
-        return self.n #there was 1000 before
+        return 1000 #self.n
 
     def __getitem__(self, key):
         ll = self.labels_left
@@ -105,7 +105,6 @@ class DoubleNMNISTClassDataset(NeuromorphicDataset):
         key_l = self.data_orig.keys_by_label[ll][ key // self.nl] 
         key_r = self.data_orig.keys_by_label[lr][ key % self.nl ] 
 
-        import pdb; pdb.set_trace()
         data_l, label_l =  self.data_orig[key_l]
         data_r, label_r =  self.data_orig[key_r]
 
