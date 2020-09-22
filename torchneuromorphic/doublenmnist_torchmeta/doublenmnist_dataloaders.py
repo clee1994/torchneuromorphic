@@ -161,6 +161,7 @@ class ClassNMNISTDataset(torchmeta.utils.data.ClassDataset):
 
     def __getitem__(self, index):
         label = self._labels[index]
+        import pdb; pdb.set_trace()
         d = DoubleNMNISTClassDataset(root = self.root, train= self.meta_train, label_u = index, transform = self.transform, target_transform = None, chunk_size = self.chunk_size)
         d.index = index
         #d.target_transform_append = lambda x: None
